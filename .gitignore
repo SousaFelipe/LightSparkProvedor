@@ -1,0 +1,5 @@
+src/config/database.js
+src/config/app.js
+
+/node_modules
+.env
