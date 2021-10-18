@@ -17,7 +17,7 @@ routes.post('/session/check', AppController.hasActiveSession)
 routes.post('/auth/store', RegisterController.store)
 
 routes.post('/auth/login', LoginController.login)
-routes.post('/auth/logout', LoginController.unauth)
+routes.post('/auth/logout', LoginController.logout)
 
 
 

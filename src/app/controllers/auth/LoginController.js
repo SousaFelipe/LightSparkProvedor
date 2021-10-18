@@ -43,7 +43,7 @@ class LoginController {
     }
 
 
-    unauth (request, response) {
+    logout (request, response) {
         return response.status(200).json({})
     }
 }
