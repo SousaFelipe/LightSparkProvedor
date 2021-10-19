@@ -14,7 +14,7 @@ class SessionRepository {
 
     async register (userId) {
         const random = Security.random(64)
-        const session = await Session.create({ user: user.id, token: random })
+        const session = await Session.create({ user: userId, token: random })
 
         return session
             ? session.token
@@ -23,7 +23,7 @@ class SessionRepository {
 
 
     async isActive (token) {
-        let session = await Session.findOne({ where: { token } })
+        const session = await Session.findOne({ where: { token } })
 
         if (session !== null) {
             session = await this.getIfUnexpired(session.user)
@@ -38,16 +38,15 @@ class SessionRepository {
         const session = await Session.findOne({ where: { user: userId } })
 
         if (session !== null) {
-            let createdAtDate = (new Date(session.created_at).getTime() + (1 * 24 * 60 * 60 * 1000))
-
-            return (createdAtDate > new Date().getTime())
-                ? session.token
-                : false
+            let createdAtDate = new Date(Date.parse(session.createdAt))
+            let expiresDate = (createdAtDate.getTime() + (1 * 24 * 60 * 60 * 1000))
+            return (expiresDate > new Date().getTime()) ? session.token : false
         }
 
         return false
     }
 }
+
 
 
 module.exports = new SessionRepository()

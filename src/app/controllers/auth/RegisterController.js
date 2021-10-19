@@ -5,7 +5,7 @@ const User = require('../../models/User')
 class RegisterController {
 
     
-    async store (request, response) {
+    async register (request, response) {
         const { name, email, password } = request.body
         
         await User.create({ name, email, password }, err => {

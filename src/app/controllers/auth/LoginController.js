@@ -1,7 +1,10 @@
-const ProvedorRepository = require('../../repository/ProvedorRepository')
-const UserRepository = require('../../repository/UserRepository')
+
+const Response = require('../../../core/Response')
 
 const lang = require('../../../config/lang').ptBR
+
+const ProvedorRepository = require('../../repository/ProvedorRepository')
+const UserRepository = require('../../repository/UserRepository')
 
 
 
@@ -10,36 +13,29 @@ class LoginController {
 
     async login (request, response) {
 
-        const { authorization } = await request.headers
-        const { email, password } = await request.body
+        const { authorization } = request.headers
+        const { email, password } = request.body
 
         if (await ProvedorRepository.authorization(authorization)) {
             if (await UserRepository.hasEmail(email)) {
                 if (await UserRepository.hasPassword(email, password)) {
                     const session = await UserRepository.attempt(email, password)
-
-                    return response.status(200).json({
-                        error: false,
-                        msg: session
-                    })
+                    return new Response(response).ok().json({ auth: true, token: session })
                 }
 
-                return response.status(403).json({
-                    error: true,
-                    msg: lang.password
-                })
+                return new Response(response)
+                    .forbidden(lang.password)
+                    .json({ auth: false })
             }
 
-            return response.status(403).json({
-                error: true,
-                msg: lang.email
-            })
+            return new Response(response)
+                .forbidden(lang.email)
+                .json({ auth: false })
         }
 
-        return response.status(403).json({
-            error: true,
-            msg: lang.auth
-        })
+        return new Response(response)
+            .forbidden(lang.auth)
+            .json({ auth: false })
     }
 
 

@@ -13,7 +13,7 @@ module.exports = {
                 allowNull: false
             },
             token: {
-                type: Sequelize.STRING(64),
+                type: Sequelize.STRING(128),
                 allowNull: false,
                 unique: true,
             },

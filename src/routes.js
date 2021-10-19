@@ -14,10 +14,11 @@ const routes = new Router()
 routes.post('/subscription/check', AppController.hasActiveSubscription)
 routes.post('/session/check', AppController.hasActiveSession)
 
-routes.post('/auth/store', RegisterController.store)
+routes.post('/auth/register', RegisterController.register)
+routes.post('/auth/remove', RegisterController.remove)
 
-routes.post('/auth/login', LoginController.login)
-routes.post('/auth/logout', LoginController.logout)
+routes.post('/login', LoginController.login)
+routes.post('/logout', LoginController.logout)
 
 
 
