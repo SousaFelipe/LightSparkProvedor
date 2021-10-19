@@ -22,7 +22,19 @@ class SessionRepository {
     }
 
 
-    async getIfNotExpired (userId) {
+    async isActive (token) {
+        let session = await Session.findOne({ where: { token } })
+
+        if (session !== null) {
+            session = await this.getIfUnexpired(session.user)
+            return (session !== null)
+        }
+
+        return false
+    }
+
+
+    async getIfUnexpired (userId) {
         const session = await Session.findOne({ where: { user: userId } })
 
         if (session !== null) {
@@ -36,7 +48,6 @@ class SessionRepository {
         return false
     }
 }
-
 
 
 module.exports = new SessionRepository()

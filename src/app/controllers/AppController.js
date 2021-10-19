@@ -1,4 +1,5 @@
 const ProvedorRepository = require('../repository/ProvedorRepository')
+const SessionRepository = require('../repository/SessionRepository')
 
 
 
@@ -28,7 +29,11 @@ class AppController {
 
 
     async hasActiveSession (request, response) {
+        const { session } = await request.body
 
+        return response.status(200).json({
+            session: SessionRepository.isActive(session)
+        })
     }
 }
 
