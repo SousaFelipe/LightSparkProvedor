@@ -1,4 +1,3 @@
-
 const Response = require('../../../core/Response')
 
 const lang = require('../../../config/lang').ptBR
@@ -23,19 +22,13 @@ class LoginController {
                     return new Response(response).ok().json({ auth: true, token: session })
                 }
 
-                return new Response(response)
-                    .forbidden(lang.password)
-                    .json({ auth: false })
+                return new Response(response).forbidden(lang.password).json({ auth: false })
             }
 
-            return new Response(response)
-                .forbidden(lang.email)
-                .json({ auth: false })
+            return new Response(response).forbidden(lang.email).json({ auth: false })
         }
 
-        return new Response(response)
-            .forbidden(lang.auth)
-            .json({ auth: false })
+        return new Response(response).forbidden(lang.auth).json({ auth: false })
     }
 
 

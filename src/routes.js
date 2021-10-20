@@ -11,8 +11,8 @@ const RegisterController = require('./app/controllers/auth/RegisterController')
 const routes = new Router()
 
 
-routes.post('/subscription/check', AppController.hasActiveSubscription)
-routes.post('/session/check', AppController.hasActiveSession)
+routes.get('/subscription/check', AppController.subscriptionCheck)
+routes.get('/session/check', AppController.sessionCheck)
 
 routes.post('/auth/register', RegisterController.register)
 routes.post('/auth/remove', RegisterController.remove)

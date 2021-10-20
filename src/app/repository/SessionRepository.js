@@ -13,7 +13,7 @@ class SessionRepository {
 
 
     async register (userId) {
-        const random = Security.random(64)
+        const random = Security.random()
         const session = await Session.create({ user: userId, token: random })
 
         return session
