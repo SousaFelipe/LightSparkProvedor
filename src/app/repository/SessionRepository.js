@@ -23,7 +23,7 @@ class SessionRepository {
 
 
     async isActive (token) {
-        const session = await Session.findOne({ where: { token } })
+        let session = await Session.findOne({ where: { token } })
 
         if (session !== null) {
             session = await this.getIfUnexpired(session.user)
