@@ -11,24 +11,23 @@ class LoginController {
 
 
     async login (request, response) {
-
-        const { authorization } = request.headers
         const { email, password } = request.body
 
-        if (await ProvedorRepository.authorization(authorization)) {
-            if (await UserRepository.hasEmail(email)) {
-                if (await UserRepository.hasPassword(email, password)) {
-                    const session = await UserRepository.attempt(email, password)
-                    return new Response(response).ok().json({ auth: true, token: session })
-                }
+        if (await UserRepository.hasEmail(email)) {
 
-                return new Response(response).forbidden(lang.password).json({ auth: false })
+            if (await UserRepository.hasPassword(email, password)) {
+                const session = await UserRepository.attempt(email, password)
+
+                return new Response(response)
+                    .ok().json({ auth: true, token: session })
             }
 
-            return new Response(response).forbidden(lang.email).json({ auth: false })
+            return new Response(response)
+                .forbidden(lang.password).json({ auth: false })
         }
 
-        return new Response(response).forbidden(lang.auth).json({ auth: false })
+        return new Response(response)
+            .forbidden(lang.email).json({ auth: false })
     }
 
 

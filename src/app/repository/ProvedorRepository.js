@@ -2,7 +2,6 @@ const { Op } = require('sequelize')
 
 const DB = require('../../database/DB')
 const Provedor = require('../models/Provedor')
-const Security = require('../../core/Security')
 
 
 
@@ -14,7 +13,23 @@ class ProvedorRepository {
     }
 
 
-    async activeSubscription (server) {
+
+    async authorization (authorization) {
+
+        const provedor = await Provedor.findOne({
+            where: {
+                [Op.and] : [
+                    { token: authorization },
+                    { status: 'A' }
+                ]
+            }
+        })
+
+        return (provedor !== null)
+    }
+
+
+    async activeSubscription (server = '') {
 
         const provedor = await Provedor.findOne({
             where: {
@@ -36,22 +51,6 @@ class ProvedorRepository {
             subscription: false,
             token: ''
         }
-    }
-
-
-
-    async authorization (authorization) {
-
-        const provedor = await Provedor.findOne({
-            where: {
-                [Op.and] : [
-                    { token: authorization },
-                    { status: 'A' }
-                ]
-            }
-        })
-
-        return (provedor !== null)
     }
 }
 

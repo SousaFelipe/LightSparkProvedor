@@ -5,14 +5,9 @@ const { Router } = require('express')
 class Route {
 
 
-    constructor () {
+    constructor (express) {
+        this.app = express
         this.router = new Router()
-    }
-
-
-    application (app) {
-        this.app = app
-        return this
     }
 
 
@@ -20,7 +15,7 @@ class Route {
         const app = this.app
 
         middlewares.forEach(middleware => {
-            app.express().use(middleware)
+            app.use(middleware)
         })
         
         return this
@@ -31,6 +26,7 @@ class Route {
         this.router.post(prefix, (request, response) => {
             action(request, response)
         })
+        return this
     }
 
 
@@ -38,6 +34,7 @@ class Route {
         this.router.get(prefix, (request, response) => {
             action(request, response)
         })
+        return this
     }
 
 
@@ -48,4 +45,4 @@ class Route {
 
 
 
-module.exports = new Route()
+module.exports = Route

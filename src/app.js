@@ -1,5 +1,4 @@
 const express = require('express')
-const cors = require('cors')
 const path = require('path')
 
 const routes = require('./routes')
@@ -7,7 +6,6 @@ const routes = require('./routes')
 
 
 class App {
-
 
 
     constructor () {
@@ -18,7 +16,6 @@ class App {
     }
 
 
-
     middlewares () {
 
         this.app.set('view engine', 'ejs')
@@ -26,21 +23,19 @@ class App {
 
         this.app.use(express.json())
         this.app.use((request, respose, next) => {
+
             request.header('Access-Controll-Allow-Origin', '*')
             request.header('Access-Controll-Allow-Methods', 'GET, POST, PUT, DELETE')
             request.header('Access-Controll-Allow-Headers', 'Access, Content-type, Authorozation, Acept, Origin, X-Requested-With')
 
-            this.app.use(cors())
             next()
         })
     }
 
 
-
     routes () {
-        this.app.use(routes)
+        this.app.use(routes(this.app))
     }
-
 
 
     run (port = 8080) {

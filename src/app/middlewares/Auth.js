@@ -1,29 +1,18 @@
-const ProvedorRepository = require('../repository/ProvedorRepository')
+const UserRepository = require('../repository/UserRepository')
+
+const Response = require('../../core/Response')
 
 
 
-class Auth {
+module.exports = async function Auth(request, response, next) {
+    const { session } = request.body
 
-
-    async subscription (request, response, next) {
-        const { authorization } = request.headers
-
-        try {
-            if (await ProvedorRepository.activeSubscription(authorization)) {
-                return next()
-            }
-
-            return response.status(403).json({})
-        }
-        catch (error) {
-            return response.status(500).json({
-                error,
-                msg: 'Erro ao checar o status da assinatura'
-            })
-        }
+    try {
+        
+    }
+    catch (error) {
+        return new Response(response)
+            .internalServerError('Erro ao checar o status da assinatura')
+            .json({ error })
     }
 }
-
-
-
-module.exports = new Auth()

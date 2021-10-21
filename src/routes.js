@@ -1,25 +1,22 @@
-const { Router } = require('express')
+const Route = require('./core/Route')
 
+const Auth = require('./app/middlewares/Auth')
+const Subscription = require('./app/middlewares/Subscription')
 
-
-const AppController = require('./app/controllers/AppController')
 const LoginController = require('./app/controllers/auth/LoginController')
 const RegisterController = require('./app/controllers/auth/RegisterController')
 
 
 
-const routes = new Router()
-
-
-routes.get('/subscription/check', AppController.subscriptionCheck)
-routes.get('/session/check', AppController.sessionCheck)
-
-routes.post('/auth/register', RegisterController.register)
-routes.post('/auth/remove', RegisterController.remove)
-
-routes.post('/login', LoginController.login)
-routes.post('/logout', LoginController.logout)
+module.exports = function routes (express) {
+    const route = new Route(express)
 
 
 
-module.exports = routes
+    route.middlewares([ Subscription ]).post('/login', LoginController.login)
+    route.middlewares([ Subscription, Auth ]).post('/logout', LoginController.logout)
+
+
+
+    return route.routes()
+} 

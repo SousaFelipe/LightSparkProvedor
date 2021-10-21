@@ -28,17 +28,7 @@ class UserRepository {
         const user = await User.findOne({ where: { email, password } })
 
         if (user != null) {
-            const currentSession = await SessionRepository.getIfUnexpired(user.id)
-
-            if (currentSession) {
-                return currentSession
-            }
-
-            const newSession = await SessionRepository.register(user.id)
-
-            return (newSession)
-                ? newSession
-                : false
+            return await SessionRepository.registerOrRetrieve(user.id)
         }
         
         return false
