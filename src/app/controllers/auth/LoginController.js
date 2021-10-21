@@ -19,6 +19,7 @@ class LoginController {
                 const session = await UserRepository.attempt(email, password)
 
                 return new Response(response)
+<<<<<<< HEAD
                     .ok().json({ auth: true, token: session })
             }
 
@@ -28,6 +29,20 @@ class LoginController {
 
         return new Response(response)
             .forbidden(lang.email).json({ auth: false })
+=======
+                    .ok()
+                    .json({ auth: true, token: session })
+            }
+
+            return new Response(response)
+                .forbidden(lang.password)
+                .json({ auth: false })
+        }
+
+        return new Response(response)
+            .forbidden(lang.email)
+            .json({ auth: false })
+>>>>>>> cb6b8c32ccb17aa1010000a95b995c8da689d7fe
     }
 
 

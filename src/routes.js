@@ -4,11 +4,10 @@ const Auth = require('./app/middlewares/Auth')
 const Subscription = require('./app/middlewares/Subscription')
 
 const LoginController = require('./app/controllers/auth/LoginController')
-const RegisterController = require('./app/controllers/auth/RegisterController')
 
 
 
-module.exports = function routes (express) {
+module.exports = function (express) {
     const route = new Route(express)
 
 
