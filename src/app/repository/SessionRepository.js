@@ -13,13 +13,24 @@ class SessionRepository {
 
 
     async register (userId) {
-        const random = Security.random()
-        const session = await Session.create({ user: userId, token: random })
-        return session ? session.token : false
+
+        const session = await Session.create({
+            user: userId,
+            token: Security.random()
+        })
+
+        return session ? session : false
     }
 
 
-    async registerOrRetrieve (userId) {
+    async retrieve (token = '') {
+        const session = await Session.findOne({ where: { token } })
+        return (session != null)
+            ? session : false
+    }
+
+
+    async registerOrRetrieve (userId = 0) {
 
         const session = await Session.findOne({
             where: { user: userId },
@@ -27,29 +38,23 @@ class SessionRepository {
         })
 
         if (session && !this.hasExpired(session)) {
-            
+            return session.token
         }
 
-        return this.register(userId)
-    }
+        const registeredSession = this.register(userId)
 
-
-    async isActive (token) {
-        let session = await Session.findOne({ where: { token } })
-
-        if (session !== null) {
-            session = await this.getIfUnexpired(session.user)
-
-            return (session !== null)
-        }
-
-        return false
+        return registeredSession
+            ? registeredSession.token
+            : false
     }
 
 
     hasExpired (session) {
+        if (!session) return false
+
         let createdAtDate = new Date(Date.parse(session.createdAt))
         let expiresTime = (createdAtDate.getTime() + (1 * 24 * 60 * 60 * 1000))
+
         return (expiresTime < new Date().getTime())
     }
 }

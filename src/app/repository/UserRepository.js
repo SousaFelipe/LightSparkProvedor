@@ -12,6 +12,15 @@ class UserRepository {
     }
 
 
+    async exists (userId, retrieve = false) {
+        const user = await User.findOne({ where: { id: userId } })
+
+        return (user !== null)
+            ? retrieve ? user : true
+            : false
+    }
+
+
     async hasEmail (email) {
         const user = await User.findOne({ where: { email } })
         return (user !== null)

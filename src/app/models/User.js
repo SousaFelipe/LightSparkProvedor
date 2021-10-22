@@ -1,5 +1,4 @@
 const { Model, DataTypes } = require('sequelize')
-const bcrypt = require('bcrypt')
 
 
 
@@ -17,16 +16,6 @@ class User extends Model {
             sequelize,
             modelName: 'User',
             tableName: 'users'
-        })
-
-        super.beforeCreate((user, options) => {
-            return bcrypt.hash()
-                .then(hash => {
-                    user.password = hash
-                })
-                .catch(error => {
-                    throw new Error(error)
-                })
         })
     }
 }

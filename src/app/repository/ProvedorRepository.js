@@ -14,7 +14,7 @@ class ProvedorRepository {
 
 
 
-    async authorization (authorization) {
+    async activeAuthorization (authorization = '') {
 
         const provedor = await Provedor.findOne({
             where: {
@@ -40,7 +40,7 @@ class ProvedorRepository {
             }
         })
 
-        if (provedor !== null && provedor.status === 'A') {
+        if (provedor && provedor.status === 'A') {
             return {
                 subscription: true,
                 token: provedor.token
@@ -49,7 +49,7 @@ class ProvedorRepository {
 
         return {
             subscription: false,
-            token: ''
+            token: (provedor ? provedor.token : '')
         }
     }
 }

@@ -10,7 +10,7 @@ module.exports = async function Subscription(request, response, next) {
     const { server } = request.body
 
     try {
-        const auth = await ProvedorRepository.authorization(authorization)
+        const auth = await ProvedorRepository.activeAuthorization(authorization)
         const subscription = await ProvedorRepository.activeSubscription(server)
         
         return (auth || subscription.subscription)
@@ -20,6 +20,6 @@ module.exports = async function Subscription(request, response, next) {
     catch (error) {
         return new Response(response)
             .internalServerError('Erro ao checar o status da assinatura')
-            .json({ error })
+            .json({ subscription: false, token: '', error })
     }
 }

@@ -6,6 +6,8 @@ class Response {
 
     constructor (response) {
         this.response = response
+        this.status = 200
+        this.message = 'OK'
     }
 
 
