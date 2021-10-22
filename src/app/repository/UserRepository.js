@@ -2,6 +2,8 @@ const DB = require('../../database/DB')
 const SessionRepository = require('../repository/SessionRepository')
 const User = require('../models/User')
 
+const Security = require('../../core/Security')
+
 
 
 class UserRepository {
@@ -28,13 +30,15 @@ class UserRepository {
 
 
     async hasPassword (email, password) {
-        const user = await User.findOne({ where: { email, password } })
+        const decrypted = Security.decrypted(password)
+        const user = await User.findOne({ where: { email, password: decrypted } })
         return (user !== null)
     }
 
 
     async attempt (email, password) {
-        const user = await User.findOne({ where: { email, password } })
+        const decrypted = Security.decrypted(password)
+        const user = await User.findOne({ where: { email, password: decrypted } })
 
         if (user != null) {
             return await SessionRepository.registerOrRetrieve(user.id)

@@ -1,5 +1,4 @@
 const Response = require('../../../core/Response')
-const Security = require('../../../core/Security')
 
 const lang = require('../../../config/lang').ptBR
 
@@ -14,28 +13,24 @@ class LoginController {
         const { email, password } = request.body
 
         if (await UserRepository.hasEmail(email)) {
-            const decrypted = Security.decrypted(password)
-
-            if (await UserRepository.hasPassword(email, decrypted)) {
-                const session = await UserRepository.attempt(email, decrypted)
+            if (await UserRepository.hasPassword(email, password)) {
+                const session = await UserRepository.attempt(email, password)
 
                 if (session) {
-                    return new Response(response).json({ auth: true, session })
+                    return new Response(response)
+                        .json({ auth: true, session })
                 }
 
                 return new Response(response)
-                    .internalServerError('Erro ao realizar login')
-                    .json({ auth: false })
+                    .forbidden(lang.session).json({ auth: false })
             }
 
             return new Response(response)
-                .forbidden(lang.password)
-                .json({ auth: false })
+                .forbidden(lang.password).json({ auth: false })
         }
 
         return new Response(response)
-            .forbidden(lang.email)
-            .json({ auth: false })
+            .forbidden(lang.email).json({ auth: false })
     }
 
 

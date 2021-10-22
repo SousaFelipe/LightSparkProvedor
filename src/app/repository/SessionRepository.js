@@ -32,28 +32,31 @@ class SessionRepository {
 
     async registerOrRetrieve (userId = 0) {
 
-        const session = await Session.findOne({
+        let session = await Session.findOne({
             where: { user: userId },
-            order: [['createdAt', 'DESC']]
+            order: [['updatedAt', 'DESC']]
         })
 
         if (session && !this.hasExpired(session)) {
+
+            session.updatedAt = new Date().toISOString().slice(0, 19).replace('T', ' ')
+            session = await session.save()
+            
             return session.token
         }
 
-        const registeredSession = this.register(userId)
+        const newSession = this.register(userId)
 
-        return registeredSession
-            ? registeredSession.token
-            : false
+        return newSession
+            ? newSession.token : false
     }
 
 
     hasExpired (session) {
         if (!session) return false
 
-        let createdAtDate = new Date(Date.parse(session.createdAt))
-        let expiresTime = (createdAtDate.getTime() + (1 * 24 * 60 * 60 * 1000))
+        let updatedAt = new Date(Date.parse(session.updatedAt))
+        let expiresTime = (updatedAt.getTime() + (1 * 24 * 60 * 60 * 1000))
 
         return (expiresTime < new Date().getTime())
     }

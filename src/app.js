@@ -1,7 +1,7 @@
 const express = require('express')
 const path = require('path')
 
-const routes = require('./routes')
+const route = require('./route')
 
 
 
@@ -34,7 +34,7 @@ class App {
 
 
     routes () {
-        this.app.use(routes(this.app))
+        this.app.use(route.routes())
     }
 
 
