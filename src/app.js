@@ -22,6 +22,7 @@ class App {
         this.app.set('views', path.join(__dirname, './app/views/'))
 
         this.app.use(express.json())
+        this.app.use(express.static(path.join(__dirname, './public')))
         this.app.use((request, respose, next) => {
 
             request.header('Access-Controll-Allow-Origin', '*')

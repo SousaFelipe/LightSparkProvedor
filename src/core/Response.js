@@ -65,7 +65,11 @@ class Response {
     }
 
 
-    async view (path) {
+    async view (path, data = false) {
+        
+        let content = data
+            ? { data: { ...data } }
+            : {  }
 
         if (this.request) {
 
@@ -76,6 +80,8 @@ class Response {
                     return this.response
                         .render('errors/authorization')
                 }
+
+                content = { ...auth, ...content }
             }
     
             if (this.mustBeRegistered) {
@@ -85,17 +91,19 @@ class Response {
                     return this.response
                         .render(`errors/subscription/${ subs.description }`)
                 }
+
+                content = { ...subs, ...content }
             }
         }
 
-        return this.response.render(path)
+        return this.response.render(path, content)
     }
 
 
     async json (data = false) {
 
         let content = data
-            ? { ...data, message: this.message }
+            ? { message: this.message, data: { ...data } }
             : { message: this.message }
 
             if (this.request) {

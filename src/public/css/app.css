@@ -1,0 +1,97 @@
+@import url('./css/globals.css');
+@import url('../vendor/bootstrap/css/bootstrap-grid.min.css');
+@import url('../vendor/datatables/dataTables.min.css');
+@import url('./css/dimensions.css');
+@import url('./css/components.css');
+
+
+
+* {
+    box-sizing: border-box;
+    margin:     0;
+    padding:    0;
+}
+
+
+
+html,
+body {
+    width:              100vw;
+    height:             100vh;
+    top:                0;
+    bottom:             0;
+    margin:             0;
+    padding:            0;
+    background-color:   var(--lsp-primary);
+    font-family:        'Montserrat';
+    font-weight:        400;
+    color:              var(--text-primary);
+}
+
+
+
+input {
+    color:              var(--text-secondary);
+    background-color:   transparent;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition:         background-color 7200s ease-in-out 0s;
+}
+
+::placeholder {
+    color:      var(--text-muted);
+    opacity:    1;
+}
+
+:-ms-input-placeholder {
+    color:      var(--text-muted);
+    opacity:    1;
+}
+
+::-ms-input-placeholder {
+    color:      var(--text-muted);
+    opacity:    1;
+}
+
+
+
+a {
+    text-decoration:    none;
+    color:              inherit;
+}
+
+
+
+hr {
+    height: 1px;
+    border: none;
+}
+
+
+
+
+
+
+
+table {
+    caption-side:       bottom;
+    border-collapse:    collapse;
+}
+
+thead,
+tbody,
+tfoot,
+tr,
+td,
+th {
+    white-space:    nowrap;
+    overflow:       hidden;
+    text-overflow:  ellipsis;
+    border-color:   inherit;
+    border-style:   solid;
+    border-width:   0;
+}

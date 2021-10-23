@@ -8,7 +8,7 @@ class AppController {
     async login (request, response) {
         
         return new Response(response)
-            .view('auth/login')
+            .view('auth/login', { title: 'Login' })
     }
 }
 
