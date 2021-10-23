@@ -1,28 +1,34 @@
-const UserRepository = require('../repository/UserRepository')
-const SessionRepository = require('../repository/SessionRepository')
-
-const Response = require('../../core/Response')
+const ProvedorRepository = require('../repository/ProvedorRepository')
 
 
 
-module.exports = async function Auth(request, response, next) {
-    const { session } = request.body
+module.exports = async function Auth(request) {
 
-    try {
-        const activeSession = await SessionRepository.retrieve(session)
+    let auth = {
+        authorization: false,
+        token: 'empty'
+    }
 
-        if (activeSession) {
-            const user = await UserRepository.exists(activeSession.user)
-            if (user) return next()
+    const { server } = request.body
+    
+    if (server) {
+        const provedor = await ProvedorRepository.getServerAuth(server)
+        
+        auth.authorization = (provedor != false)
+        auth.token = auth.authorization ? provedor.token : auth.token
+
+        return { acesso: auth }
+    }
+    else {
+        const { authorization } = request.headers
+
+        if (authorization) {
+            const provedor = await ProvedorRepository.getTokenAuth(authorization)
+
+            auth.authorization = (provedor != false)
+            auth.token = auth.authorization ? provedor.token : auth.token
         }
+    }
 
-        return new Response(response)
-            .forbidden()
-            .json({ auth: false })
-    }
-    catch (error) {
-        return new Response(response)
-            .internalServerError('Erro ao checar o status da assinatura')
-            .json({ auth: false, error })
-    }
+    return { acesso: auth }
 }

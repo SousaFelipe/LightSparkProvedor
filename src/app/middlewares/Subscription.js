@@ -1,25 +1,44 @@
 const ProvedorRepository = require('../repository/ProvedorRepository')
-const SessionRepository = require('../repository/SessionRepository')
-
-const Response = require('../../core/Response')
 
 
 
-module.exports = async function Subscription(request, response, next) {
-    const { authorization } = request.headers
+const description = function (status) {
+
+    const descriptions = {
+        'P': () => 'pre',
+        'A': () => 'ativo',
+        'B': () => 'bloqueado',
+        'C': () => 'cancelado',
+        'U': () => 'unknow'
+    }
+
+    return (descriptions[status] || descriptions['U'])()
+} 
+
+
+
+module.exports = async function Subscription(request) {
     const { server } = request.body
+    const { authorization } = request.headers
+    
+    let auth = {
+        subscription: false,
+        status: false,
+        description: 'unknow'
+    }
+    
+    if (authorization || server) {
 
-    try {
-        const auth = await ProvedorRepository.activeAuthorization(authorization)
-        const subscription = await ProvedorRepository.activeSubscription(server)
-        
-        return (auth || subscription.subscription)
-            ? next()
-            : new Response(response).forbidden().json(subscription)
+        const provedor = authorization
+            ? await ProvedorRepository.getTokenAuth(authorization)
+            : await ProvedorRepository.getServerAuth(server)
+
+        const isAuth = (provedor != false)
+
+        auth.subscription = isAuth ? (provedor.status === 'A') : false
+        auth.status = isAuth ? provedor.status : false
+        auth.description = isAuth ? description(auth.status) : auth.description
     }
-    catch (error) {
-        return new Response(response)
-            .internalServerError('Erro ao checar o status da assinatura')
-            .json({ subscription: false, token: '', error })
-    }
+
+    return { registro: auth }
 }

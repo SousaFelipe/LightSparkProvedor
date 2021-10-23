@@ -17,8 +17,13 @@ module.exports = {
                 allowNull: false,
                 unique: true,
             },
+            loggedout: {
+                type: Sequelize.ENUUM('N', 'S'),
+                defaultValue: 'N',
+                allowNull: false
+            },
             
-            ...config.timestamps
+            ...config.timestamps,
         })
     },
 

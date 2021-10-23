@@ -12,43 +12,51 @@ class SessionRepository {
     }
 
 
-    async register (userId) {
+    async retrieve (where = {}) {
 
-        const session = await Session.create({
-            user: userId,
-            token: Security.random()
+        const session = await Session.findOne({
+            where: { ...where, loggedout: 'N' },
+            order: [['updatedAt', 'DESC']]
         })
 
-        return session ? session : false
-    }
-
-
-    async retrieve (token = '') {
-        const session = await Session.findOne({ where: { token } })
         return (session != null)
             ? session : false
     }
 
 
-    async registerOrRetrieve (userId = 0) {
-
-        let session = await Session.findOne({
-            where: { user: userId },
-            order: [['updatedAt', 'DESC']]
-        })
+    async registerOrRetrieve (userId = 0, retrieve = false) {
+        let session = await this.retrieve({ user: userId })
 
         if (session && !this.hasExpired(session)) {
 
-            session.updatedAt = new Date().toISOString().slice(0, 19).replace('T', ' ')
+            session.changed('updatedAt', true)
             session = await session.save()
             
             return session.token
         }
 
-        const newSession = this.register(userId)
+        const registered = await Session.create({
+            user: userId,
+            token: Security.random()
+        })
 
-        return newSession
-            ? newSession.token : false
+        return (registered != null)
+            ? retrieve ? registered : registered.token
+            : false
+    }
+
+
+    async logout (token) {
+        let session = await this.retrieve({ token })
+
+        if (session) {
+            const result = await Session.update({ loggedout: 'S' }, { where: { token } })
+            return { loggedout: result }
+        }
+
+        return (session && session.loggedout == 'S')
+            ? { loggedout: true }
+            : { loggedout: false }
     }
 
 

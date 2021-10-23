@@ -1,3 +1,5 @@
+const Auth = require('../app/middlewares/Auth')
+const Subscription = require('../app/middlewares/Subscription')
 
 
 
@@ -8,6 +10,30 @@ class Response {
         this.response = response
         this.status = 200
         this.message = 'OK'
+        this.mustBeAuth = false
+        this.mustBeRegistered = false
+    }
+
+
+    auth (request = false) {
+        
+        if (request) {
+            this.request = request
+        }
+        
+        this.mustBeAuth = true
+        return this
+    }
+
+
+    registered (request = false) {
+        
+        if (request) {
+            this.request = request
+        }
+        
+        this.mustBeRegistered = true
+        return this
     }
 
 
@@ -39,13 +65,54 @@ class Response {
     }
 
 
-    json (data = false) {
+    async view (path) {
 
-        const content = data
+        if (this.request) {
+
+            if (this.mustBeAuth) {
+                const auth = await Auth(this.request)
+    
+                if (!auth.acesso.authorization) {
+                    return this.response
+                        .render('errors/authorization')
+                }
+            }
+    
+            if (this.mustBeRegistered) {
+                const subs = await Subscription(this.request)
+    
+                if (!subs.registro.subscription) {
+                    return this.response
+                        .render(`errors/subscription/${ subs.description }`)
+                }
+            }
+        }
+
+        return this.response.render(path)
+    }
+
+
+    async json (data = false) {
+
+        let content = data
             ? { ...data, message: this.message }
             : { message: this.message }
 
-        return this.response.status(this.status).json(content)
+            if (this.request) {
+
+                if (this.mustBeAuth) {
+                    const auth = await Auth(this.request)
+                    content = { ...auth, ...content }
+                }
+        
+                if (this.mustBeRegistered) {
+                    const subs = await Subscription(this.request)
+                    content = { ...subs, ...content }
+                }
+            }
+
+        return this.response
+            .status(this.status).json(content)
     }
 }
 

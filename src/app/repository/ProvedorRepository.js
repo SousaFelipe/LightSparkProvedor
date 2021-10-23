@@ -13,23 +13,7 @@ class ProvedorRepository {
     }
 
 
-
-    async activeAuthorization (authorization = '') {
-
-        const provedor = await Provedor.findOne({
-            where: {
-                [Op.and] : [
-                    { token: authorization },
-                    { status: 'A' }
-                ]
-            }
-        })
-
-        return (provedor !== null)
-    }
-
-
-    async activeSubscription (server = '') {
+    async getServerAuth (server = '') {
 
         const provedor = await Provedor.findOne({
             where: {
@@ -40,17 +24,17 @@ class ProvedorRepository {
             }
         })
 
-        if (provedor && provedor.status === 'A') {
-            return {
-                subscription: true,
-                token: provedor.token
-            }
-        }
+        return (provedor != null) ? provedor : false
+    }
 
-        return {
-            subscription: false,
-            token: (provedor ? provedor.token : '')
-        }
+
+    async getTokenAuth (authorization = '') {
+
+        const provedor = await Provedor.findOne({
+            where: { token: authorization }
+        })
+
+        return (provedor != null) ? provedor : false
     }
 }
 
