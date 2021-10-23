@@ -18,7 +18,7 @@ module.exports = {
                 unique: true,
             },
             loggedout: {
-                type: Sequelize.ENUUM('N', 'S'),
+                type: Sequelize.ENUM('N', 'S'),
                 defaultValue: 'N',
                 allowNull: false
             },

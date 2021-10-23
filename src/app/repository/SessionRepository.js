@@ -50,8 +50,9 @@ class SessionRepository {
         let session = await this.retrieve({ token })
 
         if (session) {
-            const result = await Session.update({ loggedout: 'S' }, { where: { token } })
-            return { loggedout: result }
+            session.loggedout = 'S'
+            session = await session.save({ fields: ['loggedout'] })
+            return { loggedout: session.loggedout == 'S' }
         }
 
         return (session && session.loggedout == 'S')

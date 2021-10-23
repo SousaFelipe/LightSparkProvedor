@@ -8,7 +8,8 @@ class Session extends Model {
     static init (sequelize) {
         super.init({
             user: DataTypes.INTEGER,
-            token: DataTypes.STRING(64)
+            token: DataTypes.STRING(64),
+            loggedout: DataTypes.ENUM('N', 'S')
         }, {
             sequelize,
             modelName: 'Session',
