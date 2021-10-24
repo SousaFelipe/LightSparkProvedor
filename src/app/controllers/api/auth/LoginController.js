@@ -1,9 +1,9 @@
-const Response = require('../../../../../core/Response')
+const Response = require('../../../../core/Response')
 
-const lang = require('../../../../../config/lang').ptBR
+const lang = require('../../../../config/lang').ptBR
 
-const SessionRepository = require('../../../../repository/SessionRepository')
-const UserRepository = require('../../../../repository/UserRepository')
+const SessionRepository = require('../../../repository/SessionRepository')
+const UserRepository = require('../../../repository/UserRepository')
 
 
 
@@ -17,7 +17,6 @@ class LoginController {
 
         if (await UserRepository.hasEmail(email)) {
             if (await UserRepository.hasPassword(email, password)) {
-                
                 const session = await UserRepository.attempt(email, password)
 
                 return session

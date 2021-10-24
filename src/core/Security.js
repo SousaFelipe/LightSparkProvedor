@@ -1,4 +1,4 @@
-const crypto = require('crypto')
+const CryptoJS = require('crypto-js')
 
 const security = require('../config/app').security
 
@@ -14,28 +14,35 @@ class Security {
     }
 
 
+    instance () {
+        return {
+            bcrypt: security.bcrypt
+        }
+    }
+
+
     encrypted (plainText) {
-        const cipher = crypto.createCipheriv(this.algorithm, this.key, this.vector)
-
-        let encrypted = cipher.update(plainText, 'utf-8', 'hex')
-            encrypted += cipher.final('hex')
-
-        return encrypted
+        const cipher = CryptoJS.AES.encrypt(plainText, this.key)
+        return cipher.toString()
     }
 
 
     decrypted (encrypted) {
-        const decipher = crypto.createDecipheriv(this.algorithm, this.key, this.vector)
-        
-        let plainText = decipher.update(encrypted, 'hex', 'utf-8')
-            plainText += decipher.final('utf8')
-
-        return plainText
+        const bytes  = CryptoJS.AES.decrypt(encrypted, this.key)
+        return bytes.toString(CryptoJS.enc.Utf8)
     }
 
 
-    random (size = 32) {
-        return crypto.randomBytes(size).toString('hex')
+    random () {
+        let random = ''
+        
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+        const charsLen = chars.length
+        
+        for (var i = 0; i < charsLen; i++)
+            random += chars.charAt(Math.floor(Math.random() * charsLen))
+
+        return this.encrypted(random)
     }
 }
 

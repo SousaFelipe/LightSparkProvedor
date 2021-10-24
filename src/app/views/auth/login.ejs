@@ -2,29 +2,77 @@
 <html lang="pt-BR">
 
     <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+        <%- include('../includes/head.ejs') %>
 
-        <link href="/css/globals.css" rel="stylesheet">
-        <link href="/css/dimensions.css" rel="stylesheet">
-        <link href="/css/components.css" rel="stylesheet">
+        <link href="/css/pages/login.css" rel="stylesheet">
 
-        <link href="/vendor/bootstrap/css/bootstrap-grid.min.css" rel="stylesheet">
-        <link href="/vendor/datatables/dataTables.min.css" rel="stylesheet">
-        <link href="/vendor/pace/minimal.css" rel="stylesheet">
-        <link href="/css/custom/scrollbar.css" rel="stylesheet">
-
-        <title> <%= data.title %> </title>
     </head>
 
     <body>
-        <h1>Hello World</h1>
+
+
+        <div id="content" class="flex-col align-center w-100 h-100">
+
+            <div class="alert-container" data-spark-container-to="statusLoginAlert">
+                <div id="statusLoginAlert" class="alert danger" role="alert">
+                    <div id="statusLoginAlertBody" class="alert-body text-white"></div>
+                    <button class="btn-close-widget" data-spark-close="statusLoginAlert">
+                        <i class="material-icons-two-tone">close</i>
+                    </button>
+                </div>
+            </div>
+        
+            <div class="form-sign-in">
+        
+                <div class="sign-in-background"></div>
+        
+                <div class="sign-in-container">
+                    <div class="flex-col">
+        
+                        <form id="formSignIn" action="http://127.0.0.1:8080/auth" method="POST">
+                            
+                            <div class="flex-row align-center mb-4">
+                                <img src="/assets/images/brand/neptune.png" alt="Light Spark" width="64" height="64">
+                                <span class="text-secondary fs-lg fw-6 ms-1"> LightSpark </span>
+                            </div>
+        
+                            <span class="text-secondary fs-xs">
+                                Por favor, acesse sua conta e siga para o painel.
+                                <br>
+                                Ainda não possui uma conta? <a href="#">Contacte-nos!</a>
+                            </span>
+        
+                            <div class="flex-col mt-4">
+                                <label for="inputEmail" class="form-label">E-mail</label>
+                                <input type="text" id="inputEmail" name="email" class="form-control" placeholder="exemplo@spark.com">
+                            </div>
+        
+                            <div class="flex-col mt-2">
+                                <label for="inputPassword" class="form-label">Senha</label>
+                                <input type="password" id="inputPassword" name="password" class="form-control" placeholder="●●●●●●●●">
+                            </div>
+                        </form>
+        
+                        <div class="flex-row justify-between align-end mt-4">
+                            <button type="button" id="btnLogin" class="btn md bg-blue-one" onclick="login()">Entrar</button>
+                            <a href="#" class="fs-xs unblock">Esqueceu sua senha?</a>
+                        </div>
+        
+                    </div>
+                </div>
+        
+            </div>
+
+        </div>
+        
+
+        <%- include('../includes/scripts.ejs') %>
+
+        <script src="./js/http/Request.js"></script>
+        <script src="./js/app/components/Alert.js"></script>
+        <script src="./js/app/pages/login.js"></script>
+
     </body>
 
 </html>
