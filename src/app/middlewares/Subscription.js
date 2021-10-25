@@ -2,7 +2,8 @@ const ProvedorRepository = require('../repository/ProvedorRepository')
 
 
 
-const description = function (status) {
+const Subscription = ((provedor) => {
+    const status = provedor ? provedor.status : 'U'
 
     const descriptions = {
         'P': () => 'pre',
@@ -12,33 +13,16 @@ const description = function (status) {
         'U': () => 'unknow'
     }
 
-    return (descriptions[status] || descriptions['U'])()
-} 
+    return { subscription: {
+        subscribed: (provedor != false && provedor.status === 'A'),
+        status: status,
+        description: (descriptions[status] || descriptions['U'])()
+    }}
+})
 
 
 
-module.exports = async function Subscription(request) {
-    const { server } = request.body
-    const { authorization } = request.headers
-    
-    let auth = {
-        subscription: false,
-        status: false,
-        description: 'unknow'
-    }
-    
-    if (authorization || server) {
-
-        const provedor = authorization
-            ? await ProvedorRepository.getTokenAuth(authorization)
-            : await ProvedorRepository.getServerAuth(server)
-
-        const isAuth = (provedor != false)
-
-        auth.subscription = isAuth ? (provedor.status === 'A') : false
-        auth.status = isAuth ? provedor.status : false
-        auth.description = isAuth ? description(auth.status) : auth.description
-    }
-
-    return { registro: auth }
-}
+module.exports = (async function () {
+    const provedor = await ProvedorRepository.requestSignature()
+    return Subscription(provedor)
+})

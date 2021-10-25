@@ -42,25 +42,7 @@ class UserRepository {
     }
 
 
-    async hasPassword (email, password, retrieve = false) {
-        
-        const decrypted = Security.decrypted(password)
-        const user = await User.findOne({ where: { email } })
-
-        if (user != null) {
-            const match = await bcrypt.compare(decrypted, user.password)
-
-            return match
-                ? retrieve ? user : true
-                : false
-        }
-
-        return false
-    }
-
-
-    async attempt (email, password) {
-        const decrypted = Security.decrypted(password)
+    async hasPassword (email, password) {
 
         const user = await User.findOne({
             where: { email },
@@ -68,7 +50,23 @@ class UserRepository {
         })
 
         if (user != null) {
-            const match = await bcrypt.compare(decrypted, user.password)
+            const match = await bcrypt.compare(password, user.password)
+            return match ? true : false
+        }
+
+        return false
+    }
+
+
+    async attempt (email, password) {
+
+        const user = await User.findOne({
+            where: { email },
+            attributes: ['id', 'password']
+        })
+
+        if (user != null) {
+            const match = await bcrypt.compare(password, user.password)
 
             if (match) {
                 return await SessionRepository.registerOrRetrieve(user.id)

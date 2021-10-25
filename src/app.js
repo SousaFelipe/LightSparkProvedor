@@ -1,7 +1,7 @@
 const express = require('express')
+const coockie = require('cookie-parser')
+const http = require('http')
 const path = require('path')
-
-const route = require('./route')
 
 
 
@@ -10,9 +10,7 @@ class App {
 
     constructor () {
         this.app = express()
-
-        this.middlewares()
-        this.routes()
+        this.server = http.createServer(this.app)
     }
 
 
@@ -22,26 +20,27 @@ class App {
         this.app.set('views', path.join(__dirname, './app/views/'))
 
         this.app.use(express.json())
+        this.app.use(coockie())
         this.app.use(express.static(path.join(__dirname, './public')))
         this.app.use((request, respose, next) => {
 
             request.header('Access-Controll-Allow-Origin', '*')
             request.header('Access-Controll-Allow-Methods', 'GET, POST, PUT, DELETE')
             request.header('Access-Controll-Allow-Headers', 'Access, Content-type, Authorozation, Acept, Origin, X-Requested-With')
-
+            
             next()
         })
     }
 
 
-    routes () {
-        this.app.use(route.routes())
+    routes (routes) {
+        this.app.use(routes)
     }
 
 
-    run (port = 8080) {
-        this.app.listen(port, () => {
-            console.log(`Listening on port : ${ port }`)
+    run (port = 80) {
+        this.server.listen(port, '127.0.0.1', () => {
+            console.log(`Servidor ativo na porta : ${ port }`);
         })
     }
 }

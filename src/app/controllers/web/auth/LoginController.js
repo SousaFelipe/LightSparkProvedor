@@ -10,25 +10,28 @@ class LoginController {
 
 
     async auth (request, response) {
-        const resp = new Response(response)
+        const unlogged = new Response(response)
 
         const { email, password } = request.body
+        const user = await UserRepository.hasEmail(email, true)
 
-        if (await UserRepository.hasEmail(email)) {
-            const user = await UserRepository.hasPassword(email, password)
+        if (user) {
+            if (await UserRepository.hasPassword(email, password)) {
+                const token = await UserRepository.attempt(email, password)
 
-            if (user) {
-                const session = await UserRepository.attempt(email, password)
-
-                return session
-                    ? resp.view('dashboard', { session, user })
-                    : resp.json({ errors: { session: lang.session } })
+                if (token) {
+                    response.cookie('session', token)
+                    return response.redirect('dashboard')
+                }
+                else {
+                    return unlogged.json({ errors: { session: lang.session } })
+                }
             }
 
-            return resp.json({ errors: { password: lang.password } })
+            return unlogged.json({ errors: { password: lang.password } })
         }
 
-        return resp.json({ errors: { email: lang.email } })
+        return unlogged.json({ errors: { email: lang.email } })
     }
 }
 

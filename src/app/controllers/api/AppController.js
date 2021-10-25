@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const Response = require('../../../core/Response')
 const Security = require('../../../core/Security')
 
-const Auth = require('../../middlewares/Auth')
+const Auth = require('../../middlewares/Authorization')
 const UserRepository = require('../../repository/UserRepository')
 
 

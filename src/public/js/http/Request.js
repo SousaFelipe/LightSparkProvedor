@@ -32,7 +32,9 @@ class Request {
         $.ajax({
             type: 'POST',
             url: this.url,
-            data: this.data
+            contentType: "application/json",
+            dataType: 'json',
+            data: JSON.stringify(this.data)
         })
         .done(async response => {
             callback.call(this, await response)

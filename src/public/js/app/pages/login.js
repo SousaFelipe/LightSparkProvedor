@@ -24,13 +24,15 @@ let login = function () {
 
     if (credentials) {
         new Request('auth', credentials).post(response => {
-            if (response.errors.email) {
+            const data = response.data
+            
+            if (data.errors.email) {
                 window.APP.component('input', 'inputEmail').invalidate()
-                statusAlert.display(response.errors.email)
+                statusAlert.display(data.errors.email)
             }
-            else if (response.errors.password) {
+            else if (data.errors.password) {
                 window.APP.component('input', 'inputPassword').invalidate()
-                statusAlert.display(response.errors.password)
+                statusAlert.display(data.errors.password)
             }
         })
     }

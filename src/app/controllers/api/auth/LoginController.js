@@ -11,23 +11,29 @@ class LoginController {
 
 
     async login (request, response) {
-        const resp = new Response(response).registered(request)
+        const unlogged = new Response(response).registered(request)
 
         const { email, password } = request.body
+        const user = await UserRepository.hasEmail(email, true)
 
-        if (await UserRepository.hasEmail(email)) {
+        if (user) {
             if (await UserRepository.hasPassword(email, password)) {
-                const session = await UserRepository.attempt(email, password)
+                const token = await UserRepository.attempt(email, password)
 
-                return session
-                    ? resp.json({ logged: true, session })
-                    : resp.forbidden(lang.session).json({ logged: false })
+                if (token) {
+                    response.cookie('session', token)
+                    return new Response(response)
+                        .registered(request).json({ logged: true, token })
+                }
+                else {
+                    return unlogged.forbidden(lang.session).json({ logged: false })
+                }
             }
 
-            return resp.forbidden(lang.password).json({ logged: false })
+            return unlogged.forbidden(lang.password).json({ logged: false })
         }
 
-        return resp.forbidden(lang.email).json({ logged: false })
+        return unlogged.forbidden(lang.email).json({ logged: false })
     }
 
 
@@ -38,6 +44,7 @@ class LoginController {
 
         if (session) {
             const loggedout = await SessionRepository.logout(session)
+            request.session.destroy(error => console.error(error))
             return resp.json(loggedout)
         }
 
