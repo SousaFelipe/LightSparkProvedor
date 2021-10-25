@@ -9,6 +9,12 @@ class Cookie {
     }
 
 
+    get (key) {
+        return this.cookies[key]
+            ? this.cookies[key] : false
+    }
+
+
     encoded (key) {
         return this.cookies[key]
             ? this.cookies[key] : false

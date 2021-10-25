@@ -29,7 +29,6 @@ class FakeMaster {
     }
 
 
-
     async authorization (request, response) {
 
         const authorization = request.headers.authorization

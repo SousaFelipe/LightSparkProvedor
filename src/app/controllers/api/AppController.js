@@ -22,17 +22,16 @@ class AppController {
     }
 
 
-
     async encrypt (request, response) {
         const { plain } = request.body
-        const encrypted = Security.encrypted(plain)
+        const encrypted = Security.cbcEncrypted(plain)
         return new Response(response).json({ encrypted })
     }
 
 
     async decrypt (request, response) {
         const { encrypted } = request.body
-        const decrypted = Security.decrypted(encrypted)
+        const decrypted = Security.cbcDecrypted(encrypted)
         return new Response(response).json({ decrypted })
     }
 

@@ -10,8 +10,8 @@ class LoginController {
 
 
     async auth (request, response) {
-        const unlogged = new Response(response)
-
+        const unlogged = new Response(response).registered(request)
+        
         const { email, password } = request.body
         const user = await UserRepository.hasEmail(email, true)
 

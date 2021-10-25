@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const CryptoJS = require('crypto-js')
 
 const security = require('../config/app').security
@@ -21,6 +22,24 @@ class Security {
     }
 
 
+    cbcEncrypted (plainText) {
+
+        const cipher = crypto.createCipheriv(this.algorithm, this.key, this.vector)
+        let encrypted = cipher.update(plainText, 'utf-8', 'hex')
+
+        return (encrypted += cipher.final('hex'))
+    }
+
+
+    cbcDecrypted (encrypted) {
+
+        const decipher = crypto.createDecipheriv(this.algorithm, this.key, this.vector)
+        let decrypted = decipher.update(encrypted, 'hex', 'utf-8')
+
+        return (decrypted += decipher.final('utf-8'))
+    }
+
+
     encrypted (plainText) {
         const cipher = CryptoJS.AES.encrypt(plainText, this.key)
         return cipher.toString()
@@ -30,6 +49,16 @@ class Security {
     decrypted (encrypted) {
         const bytes  = CryptoJS.AES.decrypt(encrypted, this.key)
         return bytes.toString(CryptoJS.enc.Utf8)
+    }
+
+
+    encoded (plainText) {
+        return new Buffer(plainText).toString('hex')
+    }
+
+
+    decoded (encoded) {
+        return new Buffer(encoded, 'hex').toString()
     }
 
 

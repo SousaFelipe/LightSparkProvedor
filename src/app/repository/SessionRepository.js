@@ -32,7 +32,7 @@ class SessionRepository {
             session.changed('updatedAt', true)
             session = await session.save()
             
-            return session.token
+            return Security.encrypted(session.token)
         }
 
         const registered = await Session.create({
@@ -41,7 +41,9 @@ class SessionRepository {
         })
 
         return (registered != null)
-            ? retrieve ? registered : registered.token
+            ? retrieve
+                ? registered
+                : Security.encrypted(registered.token)
             : false
     }
 
