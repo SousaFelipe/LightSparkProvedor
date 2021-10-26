@@ -11,9 +11,10 @@ const FakeMaster = require('./app/controllers/FakeMaster')
 
 
 
-Route.get('/login', AppControllerWEB.login)
-Route.post('/auth', LoginControllerWEB.auth)
+Route.post('/login', LoginControllerWEB.login)
+Route.post('/logout', LoginControllerWEB.logout)
 
+Route.get('/login', AppControllerWEB.login)
 Route.get('/dashboard', AppControllerWEB.dashboard)
 
 Route.get('/errors/subscription/bloqueado', AppControllerWEB.bloqueado)

@@ -23,17 +23,20 @@ let login = function () {
     )
 
     if (credentials) {
-        new Request('auth', credentials).post(response => {
+        new Request('login', credentials).post(response => {
             const data = response.data
-            
-            if (data.errors.email) {
-                window.APP.component('input', 'inputEmail').invalidate()
-                statusAlert.display(data.errors.email)
+
+            if (data.errors) {
+                if (data.errors.email) {
+                    window.APP.component('input', 'inputEmail').invalidate()
+                    statusAlert.display(data.errors.email)
+                }
+                else if (data.errors.password) {
+                    window.APP.component('input', 'inputPassword').invalidate()
+                    statusAlert.display(data.errors.password)
+                }
             }
-            else if (data.errors.password) {
-                window.APP.component('input', 'inputPassword').invalidate()
-                statusAlert.display(data.errors.password)
-            }
+            else new Request('/dashboard').redirect(true)
         })
     }
     else {

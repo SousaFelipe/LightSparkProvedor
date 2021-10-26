@@ -52,16 +52,6 @@ class Security {
     }
 
 
-    encoded (plainText) {
-        return new Buffer(plainText).toString('hex')
-    }
-
-
-    decoded (encoded) {
-        return new Buffer(encoded, 'hex').toString()
-    }
-
-
     random () {
         let random = ''
         
@@ -71,7 +61,7 @@ class Security {
         for (var i = 0; i < charsLen; i++)
             random += chars.charAt(Math.floor(Math.random() * charsLen))
 
-        return this.encrypted(random)
+        return random
     }
 }
 

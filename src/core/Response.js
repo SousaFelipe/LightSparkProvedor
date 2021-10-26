@@ -6,8 +6,10 @@ const Subscription = require('../app/middlewares/Subscription')
 class Response {
 
 
-    constructor (response) {
+    constructor (request, response) {
+        this.request = request
         this.response = response
+
         this.status = 200
         this.message = 'OK'
         this.mustBeAuth = false
@@ -15,20 +17,15 @@ class Response {
     }
 
 
-    registered (request = false) {
-        if (request) this.request = request
-        
+    registered () {
         this.mustBeRegistered = true
         return this
     }
 
 
-    authorized (request = false) {
-        if (request) this.request = request
-        
+    authorized () {        
         this.mustBeAuth = true
         this.mustBeRegistered = true
-
         return this
     }
 
@@ -71,28 +68,29 @@ class Response {
 
             if (this.mustBeAuth) {
                 const auth = await Authorization(this.request)
-
-                content = { ...auth, ...content }
     
-                if (!auth.access.authorized) {
-                    return this.response
-                        .render('errors/authorization', content)
+                if (auth.access.authorized) {
+                    content = { ...auth, ...content }
+                }
+                else {
+                    return await this.response.redirect('/login')
                 }
             }
     
             if (this.mustBeRegistered) {
                 const subs = await Subscription(this.request)
-
-                content = { ...subs, ...content }
-    
-                if (!subs.subscription.subscribed) {
-                    return this.response
+                
+                if (subs.subscription.subscribed) {
+                    content = { ...subs, ...content }
+                }
+                else {
+                    return await this.response
                         .render(`errors/subscription/${ subs.subscription.description }`, content)
                 }
             }
         }
 
-        return this.response.render(path, content)
+        return await this.response.render(path, content)
     }
 
 
@@ -102,20 +100,20 @@ class Response {
             ? { message: this.message, data: { ...data } }
             : { message: this.message, data: { } }
 
-            if (this.request) {
+        if (this.request) {
 
-                if (this.mustBeAuth) {
-                    const auth = await Authorization(this.request)
-                    content = { ...auth, ...content }
-                }
-        
-                if (this.mustBeRegistered) {
-                    const subs = await Subscription(this.request)
-                    content = { ...subs, ...content }
-                }
+            if (this.mustBeAuth) {
+                const auth = await Authorization(this.request)
+                content = { ...auth, ...content }
             }
+    
+            if (this.mustBeRegistered) {
+                const sub = await Subscription(this.request)
+                content = { ...sub, ...content }
+            }
+        }
 
-        return this.response.status(this.status).json(content)
+        return await this.response.status(this.status).json(content)
     }
 }
 

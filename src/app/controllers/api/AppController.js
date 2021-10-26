@@ -14,7 +14,7 @@ class AppController {
     async auth (request, response) {
         
         const auth = await Auth(request)
-        const resp = new Response(response)
+        const resp = new Response(request, response)
 
         return auth.authorization
             ? resp.ok().json(auth)
@@ -25,21 +25,21 @@ class AppController {
     async encrypt (request, response) {
         const { plain } = request.body
         const encrypted = Security.cbcEncrypted(plain)
-        return new Response(response).json({ encrypted })
+        return new Response(request, response).json({ encrypted })
     }
 
 
     async decrypt (request, response) {
         const { encrypted } = request.body
         const decrypted = Security.cbcDecrypted(encrypted)
-        return new Response(response).json({ decrypted })
+        return new Response(request, response).json({ decrypted })
     }
 
 
     async hash (request, response) {
         const { plain } = request.body
         const hashad = bcrypt.hashSync(plain, bcrypt.genSaltSync(Security.instance().bcrypt.ROUNDS))
-        return new Response(response).json({ hashad })
+        return new Response(request, response).json({ hashad })
     }
 
 
@@ -50,7 +50,7 @@ class AppController {
         const user = await UserRepository.exists(1, true)
         const match = await bcrypt.compare(password, user.password)
 
-        return new Response(response).json({
+        return new Response(request, response).json({
             match: match ? user.password : 'empty',
         })
     }

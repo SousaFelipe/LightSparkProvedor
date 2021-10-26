@@ -1,16 +1,16 @@
 const lang = require('../../../../config/lang').ptBR
-
 const Response = require('../../../../core/Response')
 
 const UserRepository = require('../../../repository/UserRepository')
+const SessionRepository = require('../../../repository/SessionRepository')
 
 
 
 class LoginController {
 
 
-    async auth (request, response) {
-        const unlogged = new Response(response).registered(request)
+    async login (request, response) {
+        let http = new Response(request, response).registered()
         
         const { email, password } = request.body
         const user = await UserRepository.hasEmail(email, true)
@@ -21,17 +21,31 @@ class LoginController {
 
                 if (token) {
                     response.cookie('session', token)
-                    return response.redirect('dashboard')
+                    return await (new Response(request, response).registered().json({ user }))
                 }
-                else {
-                    return unlogged.json({ errors: { session: lang.session } })
-                }
+                
+                return await http.json({ errors: { session: lang.session } })
             }
+            
+            return await http.json({ errors: { password: lang.password } })
+        }
+        
+        return await http.json({ errors: { email: lang.email } })
+    }
 
-            return unlogged.json({ errors: { password: lang.password } })
+
+    async logout (request, response) {
+        let http = new Response(request, response).authorized()
+        
+        const { session } = request.body
+
+        if (session) {
+            const loggedout = await SessionRepository.destroy(session)
+            request.session.destroy(error => console.error(error))
+            return await (new Response(request, response).registered().authorized().json(loggedout))
         }
 
-        return unlogged.json({ errors: { email: lang.email } })
+        return await http.forbidden().json({})
     }
 }
 

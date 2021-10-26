@@ -23,7 +23,7 @@ class FakeMaster {
             attributes: ['id', 'status', 'token']
         })
 
-        return new Response(response).json({
+        return new Response(request, response).json({
             provedor: (provedor != null) ? provedor.dataValues : false
         })
     }
@@ -39,7 +39,7 @@ class FakeMaster {
             attributes: ['id', 'status', 'token']
         })
 
-        return new Response(response).json({
+        return new Response(request, response).json({
             provedor: provedor ? provedor.dataValues : false
         })
     }

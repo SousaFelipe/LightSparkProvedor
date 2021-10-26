@@ -17,6 +17,19 @@ class Request {
     }
 
 
+    redirect (assign = false) {
+        
+        if (assign) {
+            history.pushState(null, null, document.URL)
+            window.addEventListener('popstate', function () {
+                history.pushState(null, null, document.URL)
+            })
+        }
+
+        window.location.assign(this.url)
+    }
+
+
     get(callback) {
         $.ajax({
             method: "GET",
