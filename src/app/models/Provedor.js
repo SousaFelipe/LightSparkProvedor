@@ -22,7 +22,7 @@ class Provedor extends Model {
         }, {
             sequelize,
             modelName: 'Provedor',
-            tableName: 'provedor'
+            tableName: 'provedores'
         })
     }
 }

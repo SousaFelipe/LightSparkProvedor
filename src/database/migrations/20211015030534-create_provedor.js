@@ -5,15 +5,9 @@ const config = require('../config')
 module.exports = {
 
     up: async (queryInterface, Sequelize) => {
-        
-        return await queryInterface.createTable('provedor', {
-            id: {
-                type: Sequelize.ENUM(['1']),
-                defaultValue: '1',
-                primaryKey: true,
-                autoIncrement: false,
-                allowNull: false
-            },
+        return await queryInterface.createTable('provedores', {
+            id: config.id,
+
             cnpj: {
                 type: Sequelize.STRING(14),
                 allowNull: false
@@ -90,6 +84,6 @@ module.exports = {
 
 
     down: async (queryInterface, Sequelize) => {
-        return await queryInterface.dropTable('provedor')
+        return await queryInterface.dropTable('provedores')
     }
 };

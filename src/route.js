@@ -16,6 +16,7 @@ Route.post('/logout', LoginControllerWEB.logout)
 
 Route.get('/login', AppControllerWEB.login)
 Route.get('/dashboard', AppControllerWEB.dashboard)
+Route.get('/provedores', AppControllerWEB.provedores)
 
 Route.get('/errors/subscription/bloqueado', AppControllerWEB.bloqueado)
 Route.get('/errors/subscription/cancelado', AppControllerWEB.cancelado)

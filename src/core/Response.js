@@ -59,10 +59,7 @@ class Response {
 
 
     async view (path, data = false) {
-        
-        let content = data
-            ? { data: { ...data } }
-            : { data: { } }
+        let content = data ? { data: { ...data } } : { data: { } }
 
         if (this.request) {
 
@@ -78,14 +75,14 @@ class Response {
             }
     
             if (this.mustBeRegistered) {
-                const subs = await Subscription(this.request)
+                const sub = await Subscription(this.request)
                 
-                if (subs.subscription.subscribed) {
-                    content = { ...subs, ...content }
+                if (sub.subscription.subscribed) {
+                    content = { ...sub, ...content }
                 }
                 else {
                     return await this.response
-                        .render(`errors/subscription/${ subs.subscription.description }`, content)
+                        .render(`errors/subscription/${ sub.subscription.description }`, content)
                 }
             }
         }
@@ -95,10 +92,7 @@ class Response {
 
 
     async json (data = false) {
-
-        let content = data
-            ? { message: this.message, data: { ...data } }
-            : { message: this.message, data: { } }
+        let content = data ? { message: this.message, data: { ...data } } : { message: this.message, data: { } }
 
         if (this.request) {
 

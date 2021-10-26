@@ -20,10 +20,10 @@ class UserRepository {
     }
 
 
-    async exists (userId, retrieve = false) {
+    async exists (where, retrieve = false) {
 
         const user = await User.findOne({
-            where: { id: userId },
+            where: { ...where },
             attributes: this.attributes
         })
 

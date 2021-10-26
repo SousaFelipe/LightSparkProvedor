@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+    <head>
+
+        <%- include('./includes/head.ejs') %>
+
+        <link href="/css/layouts/admin.css" rel="stylesheet">
+        <link href="/css/pages/provedores.css" rel="stylesheet">
+
+    </head>
+
+    <body>
+
+        <main class="flex-row h-100">
+
+            <%- include('./includes/sidebar.ejs') %>
+
+            <div id="app" class="flex-row grow-1 relative">
+
+                <%- include('./includes/header.ejs') %>
+
+                <div class="main-container">
+
+                    <div class="frame-top">
+                        
+                    </div>
+            
+                    <div class="main-content">
+                        <div class="card">
+                            <div class="card-body ms-4 mt-3 me-4 mb-4">
+                                <table id="provedores">
+                                    <thead>
+                                        <tr>
+                                            <th>CNPJ</th>
+                                            <th>RAZÃO</th>
+                                            <th>ENDEREÇO</th>
+                                            <th>AÇÕES</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </div>
+
+        </main>
+
+        <%- include('./includes/scripts.ejs') %>
+
+        <script src="/js/app/pages/provedores.js"></script>
+
+    </body>
+
+</html>

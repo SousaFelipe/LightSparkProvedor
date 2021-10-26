@@ -5,9 +5,35 @@
 
         <%- include('./includes/head.ejs') %>
 
+        <link href="/css/layouts/admin.css" rel="stylesheet">
+        <link href="/css/pages/dashboard.css" rel="stylesheet">
+
     </head>
 
     <body>
+
+        <main class="flex-row h-100">
+
+            <%- include('./includes/sidebar.ejs') %>
+
+            <div id="app" class="flex-row grow-1 relative">
+
+                <%- include('./includes/header.ejs') %>
+
+                <div class="main-container">
+
+                    <div class="frame-top">
+                        
+                    </div>
+            
+                    <div class="main-content">
+                        
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
 
         <%- include('./includes/scripts.ejs') %>
 

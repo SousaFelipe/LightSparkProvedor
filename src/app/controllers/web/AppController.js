@@ -11,14 +11,21 @@ class AppController {
         await RedirectIfAuthenticated(request, response)
 
         return await (
-            new Response(request, response).registered().view('auth/login', { title: 'Login' })
+            new Response(request, response).registered().view('auth/login')
         )
     }
 
 
     async dashboard (request, response) {
         return await (
-            new Response(request, response).authorized().view('dashboard', { title: 'Dashboard' })
+            new Response(request, response).authorized().view('dashboard')
+        )
+    }
+
+
+    async provedores (request, response) {
+        return await (
+            new Response(request, response).authorized().view('provedores')
         )
     }
 
