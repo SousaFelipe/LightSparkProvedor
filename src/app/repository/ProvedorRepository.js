@@ -1,9 +1,11 @@
 const axios = require('axios').default
 
 const DB = require('../../database/DB')
+const Security = require('../../core/Security')
+
 const Provedor = require('../models/Provedor')
 
-const Security = require('../../core/Security')
+const SessionRepository = require('./SessionRepository')
 
 
 
@@ -21,13 +23,31 @@ class ProvedorRepository {
     }
 
 
-    async requestAuthorization (authorization = '') {
-        axios.defaults.headers = { authorization }
+    async requestAuthByToken (authorization = '') {
+
+        axios.defaults.headers = {
+            authorization: Security.encrypted(authorization)
+        }
 
         const response = await axios.get('http://127.0.0.1:8080/fake/authorization/check')
         const data = response.data
 
         return data.data.provedor
+    }
+
+
+    async requestAuthBySession (token = '') {
+        const session = await SessionRepository.retrieve({ token })
+
+        if (!SessionRepository.expired(session)) {
+            const provedor = await Provedor.findOne({ where: { id: session.provedor } })
+
+            return provedor
+                ? await this.requestAuthByToken(provedor.token)
+                : false
+        }
+
+        return false
     }
 
 

@@ -38,7 +38,7 @@ class LoginController {
 
 
     async logout (request, response) {
-        const resp = new Response(response).registered(request).auth()
+        const resp = new Response(response).registered(request).authorized()
 
         const { session } = request.body
 

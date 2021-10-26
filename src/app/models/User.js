@@ -8,6 +8,7 @@ class User extends Model {
     static init (sequelize) {
 
         super.init({
+            provedor: DataTypes.INTEGER,
             name: DataTypes.STRING(96),
             email: DataTypes.STRING(96),
             password: DataTypes.STRING(96),

@@ -12,6 +12,10 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false
             },
+            provedor: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
             token: {
                 type: Sequelize.STRING(128),
                 allowNull: false,

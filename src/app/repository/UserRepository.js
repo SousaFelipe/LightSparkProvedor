@@ -15,13 +15,17 @@ class UserRepository {
         User.init(DB.connection())
 
         this.attributes = [
-            'id', 'name', 'email'
+            'id', 'provedor', 'name', 'email'
         ]
     }
 
 
     async exists (userId, retrieve = false) {
-        const user = await User.findOne({ where: { id: userId } })
+
+        const user = await User.findOne({
+            where: { id: userId },
+            attributes: this.attributes
+        })
 
         return (user !== null)
             ? retrieve ? user : true
@@ -62,14 +66,14 @@ class UserRepository {
 
         const user = await User.findOne({
             where: { email },
-            attributes: ['id', 'password']
+            attributes: ['id', 'provedor', 'password']
         })
 
         if (user != null) {
             const match = await bcrypt.compare(password, user.password)
 
             if (match) {
-                return await SessionRepository.registerOrRetrieve(user.id)
+                return await SessionRepository.registerOrRetrieve(user)
             }
         }
         

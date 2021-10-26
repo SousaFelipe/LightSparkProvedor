@@ -13,10 +13,14 @@ const Authorization = ((provedor) => {
 
 
 module.exports = (async function (request) {
+    const { authorization } = request.body
 
     const cookie = new Cookie(request.cookies)
-    const token = cookie.get('session')
+    const session = cookie.get('session')
 
-    const provedor = await ProvedorRepository.requestAuthorization(token)
+    const provedor = authorization
+        ? await ProvedorRepository.requestAuthByToken(authorization)
+        : await ProvedorRepository.requestAuthBySession(session)
+
     return Authorization(provedor)
 })
